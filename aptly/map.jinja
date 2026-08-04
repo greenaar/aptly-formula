@@ -1,0 +1,42 @@
+{#- Defaults for this formula, overridable via the `aptly:lookup` pillar.
+
+   nginx.use_nginx_formula
+       false (default) - `aptly.nginx` only writes the vhost and reloads
+       an nginx managed elsewhere, so this formula depends on no other.
+       true - include nginx-formula and let it own the service.
+   nginx.reload
+       reload nginx after writing the vhost; only used when
+       use_nginx_formula is false.
+#}
+{% set aptly = salt['grains.filter_by']({
+    'default': {
+      'homedir': '/var/lib/aptly',
+      'rootdir': '/var/lib/aptly/.aptly',
+      'use_aptly_repo': True,
+      'install_packages': True,
+      'create_user': True,
+      'secure': True,
+      'aptly_command': 'aptly',
+      'gpg_command': 'gpg',
+      'gpg_keyring': 'trustedkeys.gpg',
+      'username': 'aptly',
+      'groupname': 'aptly',
+      'user': {
+        'uid': 0,
+        'gid': 0,
+      },
+      'nginx': {
+        'use_nginx_formula': False,
+        'site_file': '/etc/nginx/sites-enabled/aptly',
+        'listen': 80,
+        'server_name': 'aptly.example.com',
+        'reload': True,
+      },
+    },
+    'Debian': {
+      'pkgs': ['aptly', 'bzip2', 'gnupg1', 'gpgv1'],
+    },
+    'RedHat': {
+      'pkgs': ['bzip2', 'gnupg2'],
+    },
+}, merge=salt['pillar.get']('aptly:lookup'), base='default') %}

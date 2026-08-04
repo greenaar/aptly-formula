@@ -1,0 +1,9 @@
+name: aptly
+os: CentOS, CentOS Linux, Debian, Raspbian, RedHat, Ubuntu
+os_family: Debian, RedHat
+version: 1.0.0
+release: 1
+minimum_version: 3006
+summary: 'aptly formula'
+description: 'Install and configure aptly, and manage its repositories, mirrors, and published snapshots from pillar.'
+top_level_dir: aptly

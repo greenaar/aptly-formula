@@ -1,0 +1,14 @@
+{#- Rendered by aptly/nginx.sls. Values come from map.jinja (defaults +
+   pillar `aptly:lookup`), not from a bare pillar.get - the settings this
+   needs live under `aptly:lookup`, so reading `aptly:rootdir` directly
+   returned nothing and produced `root /public;`. #}
+{%- from "aptly/map.jinja" import aptly with context %}
+server {
+        listen {{ aptly.nginx.listen }};
+        root {{ aptly.rootdir }}/public;
+        server_name {{ aptly.nginx.server_name }};
+
+        location / {
+                autoindex on;
+        }
+}

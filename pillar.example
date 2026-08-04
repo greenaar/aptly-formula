@@ -1,0 +1,102 @@
+aptly:
+  lookup:
+    homedir: /var/lib/aptly
+    rootdir: /var/lib/aptly/repo
+    use_aptly_repo: True
+    install_packages: True
+    create_user: True
+    secure: True
+    gpg_command: 'gpg'
+    gpg_keyring: 'trustedkeys.gpg'
+    username: aptly
+    groupname: aptly
+    user:
+      uid: 0
+      gid: 0
+    # Consumed by the optional `aptly.nginx` state.
+    nginx:
+      # false (default): this formula only drops the vhost file in and
+      #   reloads an nginx that something else already manages, so
+      #   `aptly.nginx` has no dependency on another formula.
+      # true: include nginx-formula and let it own the service.
+      use_nginx_formula: False
+      site_file: /etc/nginx/sites-enabled/aptly
+      server_name: aptly.example.com
+      listen: 80
+      reload: True
+  architectures:
+    - amd64
+    - i386
+    - all
+    - source
+  repos:
+    repo01:
+      components:
+        - main
+        - contrib
+        - non-free
+      distributions:
+        - wheezy
+        - sqeezy
+      comment: "Software Repo"
+      pkgdir: /srv/pkgs
+  mirrors:
+    google-earth-main:
+      url: http://dl.google.com/linux/earth/deb/
+      distribution: stable
+      keyserver: keys.gnupg.net
+      components:
+        - main
+      keyids:
+        - 7FAC5991
+        - 640DB551
+      architectures:
+        - amd64
+      prefix: "google-earth-main"
+    salt-main:
+      url: http://repo.saltstack.com/apt/ubuntu/ubuntu14/latest
+      distribution: trusty
+      components:
+        - main
+      keyids:
+        - DE57BFBE
+      architectures:
+        - amd64
+    stretch:
+      url: http://ftp.fr.debian.org/debian/
+      distribution: stretch
+      components:
+        - main
+      architectures:
+        - amd64
+      filter:
+        - Priority (required)
+        - Priority (important)
+        - Priority (standard)
+        - bash
+      filter-with-deps: true
+  s3Endpoints:
+    test:
+      region: us-west-2
+      bucket: bucketnamegoeshere
+      awsAccessKeyID: ""
+      awsSecretAccessKey: ""
+      prefix: ""
+      acl: "private"
+      storageClass: ""
+      encryptionMethod: ""
+      plusWorkaround: "false"
+  gpg_keypair_id: 00000000
+  gpg_passphrase: 'my voice is my passport'
+  gpg_pub_key: |
+      -----BEGIN PGP PUBLIC KEY BLOCK-----
+      Version: GnuPG v1.4.12 (GNU/Linux)
+
+      ....
+      -----END PGP PUBLIC KEY BLOCK-----
+  gpg_priv_key: |
+      -----BEGIN PGP PRIVATE KEY BLOCK-----
+      Version: GnuPG v1.4.12 (GNU/Linux)
+
+      ....
+      -----END PGP PRIVATE KEY BLOCK-----
